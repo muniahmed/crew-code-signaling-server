@@ -1,16 +1,17 @@
 const WebSocket = require("ws");
 const http = require("http");
+const cors = require("cors");
 
 const server = http.createServer((req, res) => {
-  // Health check endpoint
-  if (req.url === "/health" && req.method === "GET") {
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Health check OK");
-  } else {
-    // Default response for other routes
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Signaling server is running");
-  }
+  cors()(req, res, () => {
+    if (req.url === "/health" && req.method === "GET") {
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("Health check OK");
+    } else {
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end("Signaling server is running");
+    }
+  });
 });
 
 const wss = new WebSocket.Server({ server });
